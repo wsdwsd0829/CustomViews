@@ -23,11 +23,27 @@ class TrashBin: UIView, TrashDelegate{
             trash.animateToZero()
     }
     
-    internal func restoreAllStatus(){
-        for var garbage in garbages {
-            garbage.status = .Alive
+    internal func restoreAll(){
+        for (index,garbage) in garbages.enumerate() {
+            print("index: \(index) garbage: \(garbage)")
+            restoreTrash(garbage)
         }
     }
+    
+    func restoreTrash(var trash:TrashAble){
+        guard garbages.count > 0 else{ return }
+        //guard garbages.count > index else { return }
+        trash.status = .Alive
+        let findIndex = garbages.indexOf {
+            let trashConcrete = $0 as? UIView
+            let trashPassedIn = trash as? UIView
+            return trashConcrete == trashPassedIn
+        }
+        if findIndex != nil {
+            garbages.removeAtIndex(findIndex!)
+        }
+    }
+
     //grash Delegate
     func trash<T:TrashAble>(var trash:T){
         trash.status = .Trashed

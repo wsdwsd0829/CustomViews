@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     }
     func setupInitViews(){
         trashBin = TrashBin(frame: CGRectMake(200, 200, 200, 200))
-        let dView = WSDDraggableView(frame: CGRectMake(10,100,100,100), delegate: trashBin!)
+        let dView = WSDDraggableView(frame: CGRectMake(10,100,100,100), trashDelegate: trashBin!)
 //        let dView = WSDDraggableView(frame: CGRectMake(10,100,100,100))
 //        dView.trashDelegate = trashBin
         dView.text = "Label"
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
 
     }
     @IBAction func addNew(barButton:UIBarButtonItem){
-        let newView = WSDDraggableView(frame: CGRectMake(10,100,100,100), delegate:self.trashBin)
+        let newView = WSDDraggableView(frame: CGRectMake(10,100,100,100), trashDelegate:self.trashBin)
 //        let newView = WSDDraggableView(frame: CGRectMake(10,100,100,100))
 //        newView.trashDelegate = trashBin
         self.view.addSubview(newView)
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     @IBAction func restore(barButton:UIBarButtonItem){
         guard self.trashBin?.garbages.count > 0 else { return }
        
-        trashBin?.restoreAllStatus()
+        trashBin?.restoreAll()
         
         let garbageViews:[UIView] = (self.trashBin?.garbages.flatMap({
             ($0 as? UIView)

@@ -16,9 +16,9 @@ public class WSDDraggableView: UILabel, Draggable, TrashAble{
     var recoverRect:CGRect?
     
     public var isOverFlow:Bool = false;
-    convenience init(frame:CGRect, delegate:TrashDelegate?){
+    convenience init(frame:CGRect, trashDelegate:TrashDelegate?){
         self.init(frame:frame)
-        self.trashDelegate = delegate
+        self.trashDelegate = trashDelegate
     }
     
    override init(frame: CGRect) {
@@ -57,14 +57,18 @@ public class WSDDraggableView: UILabel, Draggable, TrashAble{
         //detect if trash the view on release
        // guard self is TrashAble else { return }
         if panRecognizer.state == .Ended {
-            trashDelegate?.trash(self)
-            if let trashBin = trashDelegate as? TrashBin{
-                if CGRectIntersectsRect(self.frame, trashBin.frame) {
-                    trashBin.animateTrash(self)
-                }
+            doTrashing()
+        }
+    }
+    func doTrashing(){
+        trashDelegate?.trash(self)
+        if let trashBin = trashDelegate as? TrashBin{
+            if CGRectIntersectsRect(self.frame, trashBin.frame) {
+                trashBin.animateTrash(self)
             }
         }
     }
+    
     //helper method
     public func clip<T:protocol<Comparable, Equatable>>(var toClip:T, min:T, max:T)->T{
         if toClip < min {
