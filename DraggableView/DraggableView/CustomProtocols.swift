@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-enum ExistStatus:Int{
-    case Alive = 0
+enum ExistStatus{
+    case Alive
     case Trashed
 }
 
@@ -23,8 +23,11 @@ protocol TrashAble{
 }
 
 protocol TrashDelegate{
+    //a data souce for all trashed items
+    var garbages:[TrashAble]{get set}
+
     //this function should trash the object status and return a bool indicate if process success or not
     //TODO: throw exception if not trashable.
-    //typealias T
     func trash<T:TrashAble>(var trash:T)
+    //optional func trashAnimate<T: UIView where T:Trashable>(var trash:T)
 }

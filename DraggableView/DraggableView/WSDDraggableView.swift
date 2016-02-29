@@ -16,15 +16,22 @@ public class WSDDraggableView: UILabel, Draggable, TrashAble{
     var recoverRect:CGRect?
     
     public var isOverFlow:Bool = false;
-    required override public init(frame: CGRect) {
+    convenience init(frame:CGRect, delegate:TrashDelegate?){
+        self.init(frame:frame)
+        self.trashDelegate = delegate
+    }
+    
+   override init(frame: CGRect) {
         super.init(frame: frame)
         //must enable this for UILabel
         self.userInteractionEnabled = true;
-        self.text = "defalut title"
-        self.recoverRect = frame
-        self.addGestureRecognizer(dragGestureRecognizer)
         dragGestureRecognizer.addTarget(self, action: Selector(
             "panAction:"))
+        self.addGestureRecognizer(dragGestureRecognizer)
+        
+        self.recoverRect = frame
+        self.text = "defalut title"
+        self.textColor = UIColor.grayColor()
         self.backgroundColor = UIColor.blueColor()
     }
 
@@ -50,10 +57,10 @@ public class WSDDraggableView: UILabel, Draggable, TrashAble{
         //detect if trash the view on release
        // guard self is TrashAble else { return }
         if panRecognizer.state == .Ended {
-            
-            if let trashBin = trashDelegate as? UIView{
+            trashDelegate?.trash(self)
+            if let trashBin = trashDelegate as? TrashBin{
                 if CGRectIntersectsRect(self.frame, trashBin.frame) {
-                    trashDelegate?.trash(self)
+                    trashBin.animateTrash(self)
                 }
             }
         }
@@ -70,12 +77,3 @@ public class WSDDraggableView: UILabel, Draggable, TrashAble{
     }
 }
 
-extension UIView{
-    public func trashAnimation(){
-        UIView.animateWithDuration(1, animations: { () -> Void in
-            self.frame = CGRectMake(self.center.x, self.center.y, 0, 0)
-            }) { (result:Bool) -> Void in
-                print("finished Animation for trash view")
-        }
-    }
-}

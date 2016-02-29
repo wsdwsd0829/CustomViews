@@ -12,16 +12,25 @@ class TrashBin: UIView, TrashDelegate{
     var garbages = [TrashAble]()
     override init(frame: CGRect) {
         super.init(frame:frame)
-        self.backgroundColor = UIColor.grayColor()
+        self.backgroundColor = UIColor.yellowColor()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.backgroundColor = UIColor.yellowColor()
     }
+    
+    func animateTrash<T:UIView where T:TrashAble>(trash:T){
+            trash.animateToZero()
+    }
+    
+    internal func restoreAllStatus(){
+        for var garbage in garbages {
+            garbage.status = .Alive
+        }
+    }
+    //grash Delegate
     func trash<T:TrashAble>(var trash:T){
         trash.status = .Trashed
-        if let trashView = trash as? UIView {
-            trashView.trashAnimation()
-        }
         self.garbages.append(trash)
     }
 }
